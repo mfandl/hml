@@ -30,4 +30,4 @@ train p = (outer p p) * zeroDiagonal
     sp = size p
 
 fwd :: Matrix R -> Vector R -> Vector R
-fwd w p = cmap signum $ w #> p
+fwd w = cmap signum . (w #>)
