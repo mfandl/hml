@@ -18,5 +18,5 @@ pixelsAsList img = map go $ pairs [0..w-1] [0..h-1]
 main :: IO ()
 main = do
   img <- readImage "data/test.png"
-  let ptrn = fromRight [] $ pixelsAsList . convertRGB8 <$> img
-  putStrLn . show $ length <$> rgbImg
+  let pat = fromRight [] $ pixelsAsList . convertRGB8 <$> img
+  putStrLn . show $ length pat
