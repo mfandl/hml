@@ -1,6 +1,6 @@
 module Main where
 
-import Hopfield
+import HopfieldMat
 import Codec.Picture
 import Data.Either
 import Control.Applicative
@@ -18,5 +18,5 @@ pixelsAsList img = map go $ pairs [0..w-1] [0..h-1]
 main :: IO ()
 main = do
   img <- readImage "data/test.png"
-  let rgbImg = convertRGB8 <$> img
-  putStrLn . show . length $ imageData <$> rgbImg
+  let ptrn = fromRight [] $ pixelsAsList . convertRGB8 <$> img
+  putStrLn . show $ length <$> rgbImg
