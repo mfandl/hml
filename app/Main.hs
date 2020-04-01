@@ -5,7 +5,7 @@ import Codec.Picture
 import Data.Either
 import Control.Applicative
 
-pairs :: [a] -> [b] -> [(a,b)]
+pairs :: [a] -> [b] -> [(a, b)]
 pairs as bs = (,) <$> as <*> bs
 
 pixelsAsList :: Image PixelRGB8 -> [Int]
