@@ -1,20 +1,31 @@
 module Main where
 
-import HopfieldMat
+import HopfieldMat as H
+import Numeric.LinearAlgebra
 import Codec.Picture
 import Data.Either
 import Control.Applicative
 
-pairs :: [a] -> [b] -> [(a, b)]
-pairs as bs = (,) <$> as <*> bs
-
 pixelsAsList :: Image PixelRGB8 -> [Int]
-pixelsAsList img@(Image w h _) = map go $ pairs [0..w-1] [0..h-1]
-  where go (x, y) = pixelToBinary $ pixelAt img x y
-        pixelToBinary (PixelRGB8 r g b) = 0
+pixelsAsList img@(Image w h _) = go <$> [0..w-1] <*> [0..h-1]
+  where go y x = pixelToBinary $ pixelAt img x y
+        -- black is 1, everything else is zero
+        pixelToBinary (PixelRGB8 r _ _) =
+          fromIntegral $ 1 - signum r
+
+listToImage :: Int -> Int -> [Int] -> Image PixelRGB8
+listToImage w h d =  generateImage go w h
+  where
+    -- this is a horrible idea performance wise. yolo
+    go x y = let v = d !! (y * w + x)
+                 pv = fromIntegral $ 255 * (1 - v)
+              in PixelRGB8 pv pv pv
 
 main :: IO ()
 main = do
   img <- readImage "data/test.png"
   let pat = fromRight [] $ pixelsAsList . convertRGB8 <$> img
-  putStrLn . show $ length pat
+  let vpat = fromList $ fromIntegral <$> pat
+  let ws s = H.train vpat (H.initialWeights vpat)
+  let newImg = listToImage 25 25 pat
+  savePngImage "data/output_test.png" $ ImageRGB8 newImg
