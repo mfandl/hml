@@ -1,22 +1,5 @@
 module Hopfield where
 
-pat :: [Int]
-pat = 
-  [  1,  1,  1,  1,  1
-  , -1, -1,  1, -1, -1
-  , -1, -1,  1, -1, -1
-  , -1, -1,  1, -1, -1
-  , -1, -1,  1, -1, -1]
-
-
-noisy :: [Int]
-noisy = 
-  [  1,  1,  1, -1,  1
-  , -1, -1,  1, -1, -1
-  , -1, -1, -1, -1, -1
-  ,  1, -1, -1, -1, -1
-  , -1, -1,  1, -1, -1]
-
 initialWeights :: [Int] -> [Int]
 initialWeights input = let ln = length input
                         in take (ln * ln) $ repeat 0
