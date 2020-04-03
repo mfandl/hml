@@ -1,8 +1,7 @@
 module Hopfield where
 
-initialWeights :: [Int] -> [Int]
-initialWeights input = let ln = length input
-                        in take (ln * ln) $ repeat 0
+initialWeights :: Int -> [Int]
+initialWeights l = take (l * l) $ repeat 0
 
 indexed :: [a] -> [(Int, a)]
 indexed = zip [0..]

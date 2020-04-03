@@ -26,6 +26,6 @@ main = do
   img <- readImage "data/test.png"
   let pat = fromRight [] $ pixelsAsList . convertRGB8 <$> img
   let vpat = fromList $ fromIntegral <$> pat
-  let ws s = H.train vpat (H.initialWeights vpat)
+  let ws s = H.train vpat (H.initialWeights (length pat))
   let newImg = listToImage 25 25 pat
   savePngImage "data/output_test.png" $ ImageRGB8 newImg
