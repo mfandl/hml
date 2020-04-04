@@ -1,4 +1,7 @@
-module HopfieldMat where
+module HopfieldMat ( initialWeights
+                   , feed
+                   , train
+                   ) where
 
 import Numeric.LinearAlgebra
 
@@ -11,5 +14,5 @@ train p w = (outer p p) * zeroDiagonal + w
     zeroDiagonal = (sp><sp)(repeat 1) - ident sp 
     sp = size p
 
-fwd :: Matrix R -> Vector R -> Vector R
-fwd w = cmap signum . (w #>)
+feed :: Matrix R -> Vector R -> Vector R
+feed w = cmap signum . (w #>)

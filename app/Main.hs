@@ -34,6 +34,6 @@ main = do
   clean <- loadPixels "data/test.png"
   noisy <- loadPixels "data/test_noisy.png"
   let ws = H.train clean (H.initialWeights (size clean))
-  let newImg = H.fwd ws noisy
+  let newImg = H.feed ws noisy
   savePngImage "data/output_test.png" . ImageRGB8
     . listToImage 25 25 $ round <$> toList newImg
