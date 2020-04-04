@@ -1,4 +1,5 @@
 module HopfieldMat ( initialWeights
+                   , energy
                    , feed
                    , train
                    ) where
@@ -16,3 +17,6 @@ train p w = (outer p p) * zeroDiagonal + w
 
 feed :: Matrix R -> Vector R -> Vector R
 feed w = cmap signum . (w #>)
+
+energy :: Matrix R -> Vector R -> Double
+energy w p = -0.5 * (sumElements $ p * (w #> p))

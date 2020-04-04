@@ -23,7 +23,7 @@ listToImage w h d =  generateImage go w h
 
 loadPixels :: FilePath -> IO (Vector R)
 loadPixels path = do
-  img <- readImage "data/test.png"
+  img <- readImage path
   let pat = fromRight [] $ pixelsAsList . convertRGB8 <$> img
   let vpat = fromList $ fromIntegral <$> pat
   return vpat
@@ -34,6 +34,8 @@ main = do
   clean <- loadPixels "data/test.png"
   noisy <- loadPixels "data/test_noisy.png"
   let ws = H.train clean (H.initialWeights (size clean))
+  putStrLn . show $ H.energy ws clean
+  putStrLn . show $ H.energy ws noisy
   let newImg = H.feed ws noisy
   savePngImage "data/output_test.png" . ImageRGB8
     . listToImage 25 25 $ round <$> toList newImg
