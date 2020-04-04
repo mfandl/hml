@@ -21,11 +21,19 @@ listToImage w h d =  generateImage go w h
                  pv = fromIntegral $ 255 * (1 - v)
               in PixelRGB8 pv pv pv
 
-main :: IO ()
-main = do
+loadPixels :: FilePath -> IO (Vector R)
+loadPixels path = do
   img <- readImage "data/test.png"
   let pat = fromRight [] $ pixelsAsList . convertRGB8 <$> img
   let vpat = fromList $ fromIntegral <$> pat
-  let ws s = H.train vpat (H.initialWeights (length pat))
-  let newImg = listToImage 25 25 pat
-  savePngImage "data/output_test.png" $ ImageRGB8 newImg
+  return vpat
+
+
+main :: IO ()
+main = do
+  clean <- loadPixels "data/test.png"
+  noisy <- loadPixels "data/test_noisy.png"
+  let ws = H.train clean (H.initialWeights (size clean))
+  let newImg = H.fwd ws noisy
+  savePngImage "data/output_test.png" . ImageRGB8
+    . listToImage 25 25 $ round <$> toList newImg
