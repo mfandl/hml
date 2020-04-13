@@ -1,23 +1,21 @@
 module Perceptron where
 
-import Numeric.LinearAlgebra ( Matrix
-                             , R
-                             , (><))
+import Prelude hiding ((<>))
+import Numeric.LinearAlgebra
+import qualified Data.Monoid
 
-mat :: Matrix R
-mat = (4><3)
-  [  1,  2,  3
-  ,  4,  5,  6
-  ,  7,  8,  9
-  , 10, 11, 12]
+feed :: Matrix R -> Vector R -> Vector R
+feed weights = flatten . fwd weights . asColumn
 
-matB :: Matrix R
-matB = (4><3)
-  [  1,  2,  3
-  ,  4,  5,  6
-  ,  7,  8,  9
-  , 10, 11, 12]
+fwd :: Matrix R -> Matrix R -> Matrix R
+fwd weights inputs = let cs = cols inputs
+                         bias = (1><cs) $ repeat (-1) :: Matrix R
+                      in step $ inputs <> weights
 
-
-someFunc :: IO ()
-someFunc = putStrLn . show $ mat + matB
+update :: Double -> Matrix R -> Matrix R -> Matrix R -> Matrix R
+update learningRate weights targets inputs  =
+  weights - scale learningRate (tr withBias <> (activations - targets))
+    where withBias = let cs = cols inputs
+                         bias = (1><cs) $ repeat (-1) :: Matrix R
+                      in inputs === bias
+          activations = fwd weights inputs
